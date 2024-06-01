@@ -20,7 +20,7 @@ class Gallery extends Phaser.Scene {
 
     this.bulletActive = false;
     this.bomberActive = false;
-    this.normalfighterActive = false;
+    this.fighterActive = false;
     this.gameOn = false;
 
     this.enemiesPath = [13, 191,
@@ -92,9 +92,9 @@ class Gallery extends Phaser.Scene {
         my.sprite.bomber.visible = false
 
         //fighter that randomly appears at different horizontal areas and falls down towards the player
-        my.sprite.normalfighter = this.add.follower(this.curve, 10, 10, "fighter")
-        my.sprite.normalfighter.setScale(3);
-        my.sprite.normalfighter.visible = false
+        my.sprite.fighter = this.add.follower(this.curve, 10, 10, "fighter")
+        my.sprite.fighter.setScale(3);
+        my.sprite.fighter.visible = false
 
         // speeds for player and bullets
         this.playerSpeed = 5
@@ -131,7 +131,7 @@ class Gallery extends Phaser.Scene {
                 this.myScore = 0;
                 this.HealthPoints = 5;
                 my.sprite.bomber.visible = true
-                my.sprite.normalfighter.visible = true
+                my.sprite.fighter.visible = true
                 my.sprite.endscreen.visible = false
                 document.getElementById('description').innerHTML = '<h2 style="display: inline;">Shoot at the bombers and the fighters to destroy them. Avoid getting hit by the fighters.</h2>' + '<h1 style="display: inline;"> Health: ' + this.HealthPoints + '</h1>' + '<h1 style="display: inline;"> Score: ' + this.myScore + '</h1>' + '<br style="display: inline;">A: left | D: right | Space: fire</br>';
                 this.gameOn = true;
@@ -172,35 +172,35 @@ class Gallery extends Phaser.Scene {
 
             // enemy that goes up and down trying to dodge player bullets
             if (this.bomberActive == false) {
-                my.sprite.bomber.x = Math.random()*this.enemiesPath[0];
-                my.sprite.bomber.y = Math.random()*this.enemiesPath[1];
+                my.sprite.bomber.x = Math.random()*this.enemiesPath[1];
+                my.sprite.bomber.y = Math.random()*this.enemiesPath[0];
                 my.sprite.bomber.startFollow(param);
                 my.sprite.bomber.visible = true;
                 this.bomberActive =true;
             }
 
             // enemy that goes up and down trying to hit the player
-            if (this.normalfighterActive == false) {
-                my.sprite.normalfighter.x = this.enemiesPath[0];
-                my.sprite.normalfighter.y = this.enemiesPath[1];
-                my.sprite.normalfighter.startFollow(param);
-                my.sprite.normalfighter.visible = true;
-                this.normalfighterActive = true;
+            if (this.fighterActive == false) {
+                my.sprite.fighter.x = this.enemiesPath[0];
+                my.sprite.fighter.y = this.enemiesPath[1];
+                my.sprite.fighter.startFollow(param);
+                my.sprite.fighter.visible = true;
+                this.fighterActive = true;
             }
 
             
 
             // collisions done by using a for loop that will check all bullets when they overlap with a bomber or fighter
             for (let bullet of my.sprite.bullets) {
-                if (this.collides(my.sprite.normalfighter, bullet)) {
+                if (this.collides(my.sprite.fighter, bullet)) {
                     bullet.y = -120;
                     this.myScore += 100;
                     this.sound.play("deadEnemy", {
                         volume: 1  
                     });
                     document.getElementById('description').innerHTML = '<h2 style="display: inline;">Shoot at the bombers and the fighters to destroy them. Avoid getting hit by the fighters.</h2>' + '<h1 style="display: inline;"> Health: ' + this.HealthPoints + '</h1>' + '<h1 style="display: inline;"> Score: ' + this.myScore + '</h1>' + '<br style="display: inline;">A: left | D: right | Space: fire</br>';
-                    my.sprite.normalfighter.visible = false;
-                    this.normalfighterActive = false
+                    my.sprite.fighter.visible = false;
+                    this.fighterActive = false
                 }
                 if (this.collides(my.sprite.bomber, bullet)) {
                     bullet.y = -120;
@@ -214,12 +214,12 @@ class Gallery extends Phaser.Scene {
                 }
             }
 
-            if (this.collides(my.sprite.playerPlane, my.sprite.normalfighter)) {
+            if (this.collides(my.sprite.playerPlane, my.sprite.fighter)) {
                 this.sound.play("playerDamage", {
                     volume: 1 
                 });
-                my.sprite.normalfighter.visible = false;
-                this.normalfighterActive = false
+                my.sprite.fighter.visible = false;
+                this.fighterActive = false
                 this.HealthPoints -= 1
                 document.getElementById('description').innerHTML = '<h2 style="display: inline;">Shoot at the bombers and the fighters to destroy them. Avoid getting hit by the fighters.</h2>' + '<h1 style="display: inline;"> Health: ' + this.HealthPoints + '</h1>' + '<h1 style="display: inline;"> Score: ' + this.myScore + '</h1>' + '<br style="display: inline;">A: left | D: right | Space: fire</br>';
             }
@@ -234,11 +234,11 @@ class Gallery extends Phaser.Scene {
                 bullet.y = -120;};
             this.gameOn = false;
             this.bomberActive = false;
-            this.normalfighterActive = false;
+            this.fighterActive = false;
             my.sprite.bomber.stopFollow();
             my.sprite.playerPlane.visible = false
             my.sprite.bomber.visible = false
-            my.sprite.normalfighter.visible = false
+            my.sprite.fighter.visible = false
             my.sprite.endscreen.visible = true
             document.getElementById('description').innerHTML = '<h2>You died. To restart the game press S.</h2><h1 style="display: inline;">Score:'+ this.myScore +'</h1>'
         }
